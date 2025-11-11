@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+  title: Ortalama Hesaplama API
+  description: >- 
+    Ali Orhun Akkirman'ın ödevi için oluşturduğu,
+    iki sayının ortalamasını hesaplayan basit bir REST API.
+  version: 1.0.0
+
+servers:
+  - url: http://127.0.0.1:5000
+    description: Yerel Geliştirme Sunucusu (Kodu çalıştırdığınızda)
+
+paths:
+  /ortalama:
+    get:
+      summary: İki sayının ortalamasını hesaplar
+      description: URL'ye sorgu parametresi (query parameter) olarak eklenen 'sayi1' ve 'sayi2' parametrelerinin ortalamasını döner.
+      operationId: getOrtalama
+      parameters:
+        - name: sayi1
+          in: query
+          required: true
+          description: Ortalama hesaplaması için ilk sayı
+          schema:
+            type: number
+            format: double
+            example: 10
+        - name: sayi2
+          in: query
+          required: true
+          description: Ortalama hesaplaması için ikinci sayı
+          schema:
+            type: number
+            format: double
+            example: 20
+      responses:
+        '200':
+          description: Başarılı hesaplama sonucu
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ortalama_sonucu:
+                    type: number
+                    format: double
+                    example: 15.0
+        '400':
+          description: Hatalı veya eksik parametre
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hata:
+                    type: string
+                    example: "Lütfen 'sayi1' ve 'sayi2' parametrelerini girin."
