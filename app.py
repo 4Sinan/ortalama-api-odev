@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/ortalama", methods=['GET'])
 def ortalama_hesapla():
-    
+    # Bu yorum satırı, 3 Aralik ödevi icin eklendi. (Kod degisikligi)
     sayi1_str = request.args.get('sayi1')
     sayi2_str = request.args.get('sayi2')
 
