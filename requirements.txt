@@ -1,1 +1,3 @@
 Flask
+mcp
+requests
