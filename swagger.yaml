@@ -1,57 +1,62 @@
 openapi: 3.0.0
 info:
-  title: Ortalama Hesaplama API
-  description: >- 
-    Ali Orhun Akkirman'ın ödevi için oluşturduğu,
-    iki sayının ortalamasını hesaplayan basit bir REST API.
+  title: Final Projesi API Dokümantasyonu
   version: 1.0.0
-
-servers:
-  - url: http://127.0.0.1:5000
-    description: Yerel Geliştirme Sunucusu (Kodu çalıştırdığınızda)
+  description: Bu API, ortalama hesaplama, kullanıcı girişi (JWT) ve kilitli veri erişimi sağlar.
 
 paths:
   /ortalama:
     get:
-      summary: İki sayının ortalamasını hesaplar
-      description: URL'ye sorgu parametresi (query parameter) olarak eklenen 'sayi1' ve 'sayi2' parametrelerinin ortalamasını döner.
-      operationId: getOrtalama
+      summary: İki sayının ortalamasını hesaplar (AÇIK ENDPOINT)
       parameters:
         - name: sayi1
           in: query
           required: true
-          description: Ortalama hesaplaması için ilk sayı
           schema:
             type: number
-            format: double
-            example: 10
         - name: sayi2
           in: query
           required: true
-          description: Ortalama hesaplaması için ikinci sayı
           schema:
             type: number
-            format: double
-            example: 20
       responses:
         '200':
           description: Başarılı hesaplama sonucu
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  ortalama_sonucu:
-                    type: number
-                    format: double
-                    example: 15.0
-        '400':
-          description: Hatalı veya eksik parametre
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  hata:
-                    type: string
-                    example: "Lütfen 'sayi1' ve 'sayi2' parametrelerini girin."
+
+  /login:
+    post:
+      summary: Kullanıcı girişi ve JWT Token alma
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "admin"
+                password:
+                  type: string
+                  example: "123"
+      responses:
+        '200':
+          description: Başarılı giriş, token döner
+
+  /ozel-veri:
+    get:
+      summary: Kilitli veritabanı verisine erişim (JWT GEREKTİRİR)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Yetkili erişim başarılı
+        '401':
+          description: Yetkisiz erişim - Token eksik veya hatalı
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
