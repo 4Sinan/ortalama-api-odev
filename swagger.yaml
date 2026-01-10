@@ -1,13 +1,46 @@
 openapi: 3.0.0
 info:
-  title: Final Projesi API Dokümantasyonu
-  version: 1.0.0
-  description: Bu API, ortalama hesaplama, kullanıcı girişi (JWT) ve kilitli veri erişimi sağlar.
+  title: "Final Projesi: JWT Korumalı API"
+  version: "1.0.0"
+  description: "Bu API; kullanıcı girişi, JWT tabanlı güvenlik ve kilitli veritabanı erişimi özelliklerini içerir."
+
+servers:
+  - url: http://localhost:5000
+    description: Yerel Docker Sunucusu
 
 paths:
+  /login:
+    post:
+      summary: "Kullanıcı Girişi"
+      description: "admin/123 bilgileriyle giriş yaparak JWT token almanızı sağlar."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: admin
+                password:
+                  type: string
+                  example: "123"
+      responses:
+        '200':
+          description: "Giriş başarılı, token oluşturuldu."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+
   /ortalama:
     get:
-      summary: İki sayının ortalamasını hesaplar (AÇIK ENDPOINT)
+      summary: "Ortalama Hesapla (Herkes Açık)"
+      description: "İki sayının ortalamasını alan genel servis."
       parameters:
         - name: sayi1
           in: query
@@ -21,38 +54,19 @@ paths:
             type: number
       responses:
         '200':
-          description: Başarılı hesaplama sonucu
-
-  /login:
-    post:
-      summary: Kullanıcı girişi ve JWT Token alma
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: "admin"
-                password:
-                  type: string
-                  example: "123"
-      responses:
-        '200':
-          description: Başarılı giriş, token döner
+          description: "Hesaplama başarılı."
 
   /ozel-veri:
     get:
-      summary: Kilitli veritabanı verisine erişim (JWT GEREKTİRİR)
+      summary: "Kilitli Veri (JWT Gerekir)"
+      description: "Sadece geçerli bir JWT token ile erişilebilen gizli bölümdür."
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Yetkili erişim başarılı
+          description: "Yetkili erişim sağlandı."
         '401':
-          description: Yetkisiz erişim - Token eksik veya hatalı
+          description: "Yetkisiz erişim!"
 
 components:
   securitySchemes:
